@@ -138,7 +138,7 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 30px 20px;
         }
 
@@ -166,10 +166,9 @@
             font-size: 20px;
             color: #025007;
             text-align: left;
-            float: right;
         }
         .product-image {
-            aspect-ratio: 3 / 4;
+            aspect-ratio: 3 / 3;
             border-radius: 4px;
             background-color: #f0f0f0;
         }
@@ -246,8 +245,8 @@
                 </div>
                     
                 <div>
-                    <span class="product-name">{{ product.nome }}<span/>
-                    <span class="product-price">R$ {{ product.preco|floatformat:2 }}<span/>
+                    <p class="product-name">{{ product.nome }}</p>
+                    <p class="product-price">R$ {{ product.preco|floatformat:2 }}</p>
                 </div>
             </div>
             {% endfor %}
