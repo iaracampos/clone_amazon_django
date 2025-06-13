@@ -15,6 +15,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+print("BASE_DIR:", BASE_DIR)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -26,6 +28,11 @@ SECRET_KEY = "django-insecure-ulyk*^4htd@k4e^xw_trw&$(e(8cemsad%n&a=a%g$%(ljah1m
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+MEDIA_URL = "produtos/"
+MEDIA_ROOT = BASE_DIR / "produtos"
+
+print("MEDIA_ROOT:", MEDIA_ROOT)
 
 
 # Application definition
@@ -55,7 +62,7 @@ ROOT_URLCONF = "amazonproject.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "app" /"templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
