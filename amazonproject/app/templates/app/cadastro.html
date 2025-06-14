@@ -1,0 +1,245 @@
+{% include './header.html' %}
+{% include './navbar.html' %}
+
+<style>
+    main {
+        width: 100%;
+        padding: 0 2rem;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .registration-form {
+        width: 100%;
+    }
+
+    .form-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        grid-template-areas:
+            "access address"
+            "personal address";
+    }
+
+    /* --- Seções do Formulário --- */
+    .form-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-section h2 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Atribuição das áreas do grid */
+    .access-data {
+        grid-area: access;
+    }
+
+    .address-data {
+        grid-area: address;
+    }
+
+    .personal-data {
+        grid-area: personal;
+    }
+
+    /* --- Linhas e Grupos de Formulário --- */
+    .form-row {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .form-group.full-width {
+        width: 100%;
+    }
+
+    .form-group label {
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        font-size: 0.9rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    input::placeholder {
+        color: #aaa;
+    }
+
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+        padding-right: 2.5rem;
+    }
+
+
+    /* --- Botões de Ação --- */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        gap: 1rem;
+    }
+
+    .btn-cancel,
+    .btn-create {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-cancel {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        color: #333;
+    }
+
+    .btn-cancel:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn-create {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-create:hover {
+        background-color: #218838;
+    }
+</style>
+
+<main>
+    <h1>CADASTRO</h1>
+
+    <form class="registration-form">
+        <div class="form-container">
+
+            <div class="form-section access-data">
+                <h2>Dados para acesso.</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Digite seu Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-email">Confirmar e-mail</label>
+                        <input type="email" id="confirm-email" placeholder="Digite seu Email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" placeholder="Digite sua Senha">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirmar senha</label>
+                        <input type="password" id="confirm-password" placeholder="Digite sua Senha">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section address-data">
+                <h2>Endereço</h2>
+                <div class="form-group full-width">
+                    <label for="address">Endereço</label>
+                    <input type="text" id="address" placeholder="Digite seu endereço completo">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" placeholder="Digite o CEP de sua cidade">
+                    </div>
+                    <div class="form-group">
+                        <label for="number">Número</label>
+                        <input type="text" id="number" placeholder="Número">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">Cidade</label>
+                        <input type="text" id="city" placeholder="Nome de sua cidade">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">Estado</label>
+                        <select id="state">
+                            <option value="Acre">Acre</option>
+                            <option value="Alagoas">Alagoas</option>
+                            <option value="Amapá">Amapá</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="neighborhood">Bairro</label>
+                    <input type="text" id="neighborhood" placeholder="Bairro">
+                </div>
+                <div class="form-group full-width">
+                    <label for="complement">Complemento</label>
+                    <input type="text" id="complement" placeholder="Complemento">
+                </div>
+            </div>
+
+            <div class="form-section personal-data">
+                <h2>Dados pessoais.</h2>
+                <div class="form-group">
+                    <label for="full-name">Nome Completo</label>
+                    <input type="text" id="full-name" placeholder="Digite seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" placeholder="Digite seu CPF">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input type="tel" id="phone" placeholder="Digite seu telefone">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-create">Criar Conta</button>
+        </div>
+    </form>
+</main>

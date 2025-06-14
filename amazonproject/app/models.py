@@ -10,6 +10,7 @@ class Cliente(models.Model):
 
     def __str__(self):
         return f"{self.nome} - {self.email}"
+    
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=50)
@@ -18,6 +19,7 @@ class Categoria(models.Model):
         return self.nome
 
 class Produto(models.Model):
+    id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=50)
     descricao = models.TextField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)
@@ -27,6 +29,9 @@ class Produto(models.Model):
 
     def __str__(self):
         return f"{self.nome} - R${self.preco}"
+    
+    def em_estoque(self):
+        return self.estoque > 0
 
 class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
@@ -84,4 +89,3 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review - Produto: {self.produto.nome} - Nota: {self.nota}"
-

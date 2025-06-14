@@ -1,0 +1,287 @@
+{% include './header.html' %}
+{% include './navbar.html' %}
+
+<style>
+    /* --- Estilos do Conteúdo Principal (Minha Conta) --- */
+    .account-page {
+        padding: 50px 0;
+    }
+
+    .account-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+    }
+
+    .account-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    /* --- Card Genérico --- */
+    .card {
+        background-color: #fff;
+        padding: 30px;
+        border: 1px solid #e0e0e0;
+        box-sizing: border-box;
+    }
+
+    /* --- Card: Informações Pessoais --- */
+    .personal-info-card {
+        text-align: center;
+    }
+
+    .user-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 2px solid #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 20px auto;
+    }
+
+    .personal-info-card h2 {
+        font-size: 22px;
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+
+    .info-field {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+
+    .info-field strong {
+        display: block;
+        font-weight: bold;
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 4px;
+    }
+
+    .info-field span {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .personal-info-buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+    }
+
+    /* --- Card: Endereços --- */
+    .address-section {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .address-card h2,
+    .other-addresses h2 {
+        font-size: 22px;
+        margin-top: 0;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 15px;
+    }
+
+    .address-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .address-details .full-width {
+        grid-column: 1 / -1;
+    }
+
+    .address-card-footer {
+        text-align: right;
+        margin-top: 30px;
+    }
+
+    .other-addresses {
+        background-color: #fff;
+        padding: 30px;
+    }
+
+    .other-addresses-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .no-address-msg {
+        color: #777;
+    }
+
+    /* --- Botões --- */
+    .btn {
+        padding: 12px 25px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #333;
+    }
+
+    .btn-secondary {
+        background-color: #e0e0e0;
+        color: #333;
+        border: 1px solid #ccc;
+    }
+
+    .btn-secondary:hover {
+        background-color: #d4d4d4;
+    }
+
+    .btn-full-width {
+        width: 100%;
+    }
+
+    /* --- Responsividade --- */
+    @media (max-width: 992px) {
+        .account-content {
+            grid-template-columns: 1fr;
+        }
+
+        .search-bar {
+            display: none;
+            /* Esconde a barra de pesquisa em telas menores para simplificar */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-header .container {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-nav ul {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .address-details {
+            grid-template-columns: 1fr;
+        }
+
+        .address-details .full-width {
+            grid-column: auto;
+        }
+
+        .other-addresses-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+</style>
+
+
+<main class="account-page">
+    <div class="container">
+        <h1 class="account-title">MINHA CONTA</h1>
+
+        <div class="account-content">
+
+            <div class="personal-info-card card">
+                <div class="user-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                            fill="#888" />
+                    </svg>
+                </div>
+                <h2>Informações Pessoais</h2>
+
+                <div class="info-field">
+                    <strong>Nome Completo:</strong>
+                    <span>Fernando José Gregatti Noronha</span>
+                </div>
+                <div class="info-field">
+                    <strong>E-mail:</strong>
+                    <span>fernando.noronha@estudante.ufla.br</span>
+                </div>
+                <div class="info-field">
+                    <strong>Telefone:</strong>
+                    <span>(35) 998047196</span>
+                </div>
+                <div class="info-field">
+                    <strong>CPF:</strong>
+                    <span>119.300.196-02</span>
+                </div>
+
+                <div class="personal-info-buttons">
+                    <button class="btn btn-secondary btn-full-width">Alterar Senha</button>
+                    <button class="btn btn-primary btn-full-width">Alterar Informações</button>
+                </div>
+            </div>
+
+            <div class="address-section">
+                <div class="address-card card">
+                    <h2>Endereço Principal</h2>
+                    <div class="address-details">
+                        <div class="info-field full-width">
+                            <strong>Endereço:</strong>
+                            <span>Avenida Doutor José Nicolau Mileo</span>
+                        </div>
+                        <div class="info-field">
+                            <strong>Bairro:</strong>
+                            <span>Alto da Boa Vista</span>
+                        </div>
+                        <div class="info-field">
+                            <strong>Número:</strong>
+                            <span>943</span>
+                        </div>
+                        <div class="info-field">
+                            <strong>CEP:</strong>
+                            <span>37480-000</span>
+                        </div>
+                        <div class="info-field">
+                            <strong>Cidade:</strong>
+                            <span>Lambari</span>
+                        </div>
+                        <div class="info-field">
+                            <strong>Estado:</strong>
+                            <span>Minas Gerais</span>
+                        </div>
+                        <div class="info-field">
+                            <strong>Complemento:</strong>
+                            <span>Apartamento 01</span>
+                        </div>
+                    </div>
+                    <div class="address-card-footer">
+                        <button class="btn btn-primary">Alterar Informações</button>
+                    </div>
+                </div>
+
+                <div class="other-addresses">
+                    <h2>Outros endereços</h2>
+                    <div class="other-addresses-content">
+                        <p class="no-address-msg">Não há outros endereços cadastrados.</p>
+                        <button class="btn btn-primary">Cadastrar novo endereço</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
