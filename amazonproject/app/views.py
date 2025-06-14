@@ -4,21 +4,37 @@ from django.shortcuts import get_object_or_404, redirect
 
 # Create your views here.
 def index(request):
+    query = request.GET.get('search')
+
     products = Produto.objects.all()
+
+    if query:
+        products = products.filter(nome__icontains=query)
+
     context = {
         'products': products,
+        'query_original': query, 
     }
     
     return render(request, 'app/index.html', context)
 
 def product(request, id):
     produto = get_object_or_404(Produto, id=id)
+    cliente = get_object_or_404(Cliente, id=request.user.id) if request.user.is_authenticated else None
     
     comentarios = Review.objects.filter(produto=produto).order_by('-data')
+    count_reviews = produto.count_reviews()
+
+    range_rate = [1 for _ in range(produto.star_rating())]
+    range_void = [1 for _ in range(5 - produto.star_rating())]  
+
     
     context = {
         'produto': produto,
         'comentarios': comentarios,
+        'range_rate': range_rate,
+        'range_void': range_void,
+        'cliente': cliente,
     }
 
     return render(request, 'app/product.html', context)
@@ -26,17 +42,18 @@ def product(request, id):
 
 def adicionar_comentario(request, id):
     produto = get_object_or_404(Produto, id=id)
+    cliente = get_object_or_404(Cliente, id=request.user.id)
+
     if request.method == 'POST':
-        # Valide e salve o comentário aqui
         texto_comentario = request.POST.get('texto')
         if texto_comentario:
             Review.objects.create(
                 produto=produto,
-                autor=request.user, # Garante que o usuário esteja logado
-                texto=texto_comentario
-                # Adicione o campo de avaliação aqui
+                cliente=cliente,
+                comentario=texto_comentario,
+                nota=request.POST.get('nota', 5)  
             )
-    return redirect('product', id=produto.id) # Redireciona de volta para a página do produto
+    return redirect('produto', id=produto.id) 
 
 def login(request):
     if request.method == 'POST':
@@ -95,3 +112,28 @@ def carrinho(request):
     }
     
     return render(request, 'app/carrinho.html', context) 
+
+
+def adicionar_ao_carrinho(request, id):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Or your app's login URL
+
+    produto = get_object_or_404(Produto, id=id)
+    # Assuming your Cliente model is linked one-to-one with the User model
+    cliente = get_object_or_404(Cliente, id=request.user.id)
+    
+    # Get or create a cart for the current client
+    carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
+    
+
+    item_carrinho, created = ItemCarrinho.objects.get_or_create(
+        carrinho=carrinho,
+        produto=produto,
+        defaults={'quantidade': 1}
+    )
+    
+    if not created:
+        item_carrinho.quantidade += 1
+        item_carrinho.save()
+    
+    return redirect('carrinho')

@@ -132,6 +132,7 @@
 
     .review-content {
         flex-grow: 1;
+
     }
 
     .review-header {
@@ -152,6 +153,7 @@
     .review-text {
         color: #555;
         line-height: 1.5;
+        background-color: #fff;
     }
 
     .review-form textarea {
@@ -193,14 +195,17 @@
             <div class="rating-stock">
                 <div>
                     <span class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+                        {% for i in range_rate %}
+                        <i class="fas fa-star fa-solid"></i>
+                        {% endfor %}
+                        {% for i in range_void %}
+                        <i class="fa-regular fa-star"></i>
+                        {% endfor %}
                     </span>
-                    <span style="font-weight: 600;">4.5/5</span>
-                    <a href="#reviews" style="font-size: 14px; margin-left: 10px; color: #555;">150 Reviews</a>
+                    <span style="font-weight: 600;">{{ produto.star_rating }}</span>
+                    <a href="#reviews" style="font-size: 14px; margin-left: 10px; color: #555;">
+                        {{produto.count_reviews}} avaliações
+                    </a>
                 </div>
                 {% if produto.em_estoque %}
                 <span class="stock-status">Em Estoque</span>
@@ -219,8 +224,9 @@
                 <input type="text" value="1">
                 <button>+</button>
             </div>
-
-            <button class="buy-button">Comprar</button>
+            <a href="{% url 'adicionar_ao_carrinho' produto.id %}" class="buy-link">
+                <button class="buy-button">Comprar</button>
+            </a>
         </div>
     </section>
 
@@ -235,14 +241,19 @@
             <div class="review-content">
                 <div class="review-header">
                     <span class="reviewer-name">{{ cliente.nome|default:'Seu Usuário' }}</span>
-                    <span class="review-rating">
-                        <i class="fas fa-star"></i>
-                    </span>
+
                 </div>
                 <textarea name="texto" placeholder="Escreva aqui sua avaliação deste produto..."></textarea>
+                <br>
+                <br>
+                <label for="nota">Avaliação:</label>
+                <input type="number" name="nota" id="nota" min="1" max="5" value="5"
+                    style="width: 60px; margin-left: 10px;">
                 <button type="submit" class="publish-review-btn">Publicar Review</button>
             </div>
         </form>
+
+        <br>
 
         {% for comentario in comentarios %}
         <div class="review-card">
@@ -251,12 +262,14 @@
             </div>
             <div class="review-content">
                 <div class="review-header">
-                    <span class="reviewer-name">{{ comentario.autor.username }}</span>
+                    <span class="reviewer-name">{{ comentario.cliente.nome }}</span>
                     <span class="review-rating">
-                        <i class="fas fa-star"></i> {{ comentario.avaliacao }}/5
+                        <i class="fas fa-star"></i> {{ comentario.nota }}/5
                     </span>
                 </div>
-                <p class="review-text">{{ comentario.texto }}</p>
+                <div class="review-text">
+                    <p>{{ comentario.comentario }}</p>
+                </div>
             </div>
         </div>
         {% empty %}

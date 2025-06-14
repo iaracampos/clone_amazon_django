@@ -32,6 +32,15 @@ class Produto(models.Model):
     
     def em_estoque(self):
         return self.estoque > 0
+    
+    def star_rating(self):
+        reviews = self.review_set.all()
+        if not reviews:
+            return 5
+        return round(sum(review.nota for review in reviews) / len(reviews))
+    
+    def count_reviews(self):
+        return self.review_set.count()
 
 class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
