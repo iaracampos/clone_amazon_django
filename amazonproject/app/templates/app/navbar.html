@@ -1,0 +1,151 @@
+<style>
+    .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .logo i {
+        margin-right: 8px;
+        font-size: 28px;
+    }
+
+    .search-container {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        padding: 0 40px;
+    }
+
+    .search-bar {
+        display: flex;
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .search-bar input {
+        border: none;
+        padding: 10px 15px;
+        font-size: 14px;
+        flex-grow: 1;
+        background-color: #f5f5f5;
+    }
+
+    .search-bar input:focus {
+        outline: none;
+        background-color: #ffffff;
+    }
+
+    .search-bar button {
+        border: none;
+        background-color: #f5f5f5;
+        color: #757575;
+        padding: 0 20px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .main-nav ul,
+    .header-icons ul {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .main-nav a {
+        font-size: 15px;
+        color: #333;
+    }
+
+    .header-icons i {
+        font-size: 24px;
+        color: #333;
+    }
+
+    /* --- Category Navigation --- */
+    .category-nav {
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #333;
+    }
+
+    .category-nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 45px;
+        padding: 15px 0;
+    }
+
+    .category-nav a {
+        font-size: 15px;
+        font-weight: 500;
+        color: #e5e5e5;
+    }
+</style>
+
+<body>
+    <header class="main-header container">
+        <a href="{% url 'index' %}">
+            <div class="logo">
+                <i class="bx bx-store-alt"></i>
+                <span>Budega</span>
+            </div>
+        </a>
+
+        <div class="search-container">
+            <div class="search-bar">
+                <input type="text" placeholder="Pesquisar" />
+                <button type="submit">Pesquisar</button>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Página Inicial</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-icons">
+            <ul>
+                <li>
+                    <a href="#"><i class="bx bx-heart"></i></a>
+                </li>
+                <li>
+                    <a href="#"><i class="bx bx-cart"></i></a>
+                </li>
+                <li>
+                    <a href="#"><i class="bx bx-user-circle"></i></a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <nav class="category-nav">
+        <div class="container">
+            <ul>
+                <li><a href="#">Roupas</a></li>
+                <li><a href="#">Telefones</a></li>
+                <li><a href="#">Eletrônicos</a></li>
+                <li><a href="#">Móveis</a></li>
+                <li><a href="#">Autocuidado</a></li>
+                <li><a href="#">Jogos</a></li>
+            </ul>
+        </div>
+    </nav>
+    <br><br>

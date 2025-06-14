@@ -8,6 +8,13 @@ from django.conf import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
+
+    path("produto/<int:id>/", views.product, name="produto"),
+    path("produto/<int:id>/adicionar-comentario/", views.adicionar_comentario, name="adicionar_comentario"),
+    path("login/", views.login, name="login"),
+    path("cadastro/", views.cadastro, name="cadastro"),
+    path("my-account/", views.minha_conta, name="minha_conta"),
+    path("carrinho/", views.carrinho, name="carrinho")
 ]
 
 if settings.DEBUG:

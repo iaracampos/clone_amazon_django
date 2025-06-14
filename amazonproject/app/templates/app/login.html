@@ -1,0 +1,170 @@
+{% include './header.html' %}
+{% include './navbar.html' %}
+
+<style>
+    .main-content {
+        max-width: 1000px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+    }
+
+    .identification-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .identification-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #000;
+        margin-bottom: 0.5rem;
+    }
+
+    .identification-header p {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    /* --- Container dos Formulários --- */
+    .forms-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 3rem;
+    }
+
+    .form-box {
+        border: 1px solid #e0e0e0;
+        padding: 2.5rem;
+        background-color: #fff;
+        width: 100%;
+    }
+
+    /* --- Formulário de Login --- */
+    .login-box {
+        flex-basis: 50%;
+    }
+
+    .form-title-icon {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #000;
+        padding-bottom: 0.7rem;
+        width: fit-content;
+    }
+
+    .form-title-icon .login-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .form-title-icon h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    /* --- Formulário de Cadastro --- */
+    .register-box {
+        flex-basis: 50%;
+    }
+
+    .register-box h3 {
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    /* --- Estilos de Formulário (Inputs, Labels, Botões) --- */
+    .input-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .input-group label {
+        font-size: 0.9rem;
+        color: #888;
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        pointer-events: none;
+        transition: all 0.2s ease;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #e0e0e0;
+        background-color: #f9f9f9;
+        font-size: 1rem;
+    }
+
+    /* Efeito para o label sumir quando se digita */
+    .input-group input:focus+label,
+    .input-group input:not(:placeholder-shown)+label {
+        opacity: 0;
+    }
+
+    .input-group input:focus {
+        outline: 1px solid #000;
+        background-color: #fff;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        padding: 1rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #333;
+    }
+</style>
+
+<main class="main-content">
+    <div class="identification-header">
+        <h1>IDENTIFICAÇÃO</h1>
+        <p>Faça seu login ou crie uma conta caso não possua cadastro.</p>
+    </div>
+
+    <div class="forms-container">
+        <div class="form-box login-box">
+            <div class="form-title-icon">
+                <i class="fa-regular fa-user login-icon"></i>
+                <h2>LOGIN</h2>
+            </div>
+            <form>
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email">
+                </div>
+                <div class="input-group">
+                    <label for="login-senha">Senha</label>
+                    <input type="password" id="login-senha">
+                </div>
+                <button type="submit" class="btn-primary">Prosseguir</button>
+            </form>
+        </div>
+
+        <div class="form-box register-box">
+            <h3>Ainda não possuo cadastro.</h3>
+            <form>
+                <div class="input-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email">
+                </div>
+                <button type="submit" class="btn-primary">Prosseguir</button>
+            </form>
+        </div>
+    </div>
+</main>
