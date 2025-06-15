@@ -70,6 +70,9 @@ class Carrinho(models.Model):
 
     def __str__(self):
         return f"Carrinho #{self.id} - Cliente: {self.cliente.nome} - Status: {self.status}"
+    
+    def total(self):
+        return sum(item.produto.preco * item.quantidade for item in self.itens.all())
 
 class ItemCarrinho(models.Model):
     carrinho = models.ForeignKey(Carrinho, on_delete=models.CASCADE, related_name='itens')

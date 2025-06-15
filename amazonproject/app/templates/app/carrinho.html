@@ -186,12 +186,14 @@
     <div class="cart-section">
 
         <div class="cart-items">
+            {% for item in items %}
+
             <div class="cart-item">
-                <img src="https://i.ibb.co/L9jL3C9/t-shirt.png" alt="Gradient Graphic T-shirt" class="product-image">
+                <img src="{{ item.imagem.url }}" alt="{{ item.nome }}" class="product-image">
                 <div class="item-details">
-                    <h2>Gradient Graphic T-shirt</h2>
-                    <p>Descrição: Lorem ipsum lorem ipsum</p>
-                    <span class="price">$145</span>
+                    <h2>{{ item.nome }}</h2>
+                    <p>{{ item.descricao }}</p>
+                    <span class="price">{{ item.preco }}</span>
                 </div>
                 <div class="item-controls">
                     <div class="quantity-selector">
@@ -199,41 +201,11 @@
                         <span>1</span>
                         <button class="quantity-btn">+</button>
                     </div>
-                    <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                    <a class="delete-btn" href="{% url 'remover_do_carrinho' item.id %}"><i
+                            class="fas fa-trash-alt"></i></a>
                 </div>
             </div>
-            <div class="cart-item">
-                <img src="https://i.ibb.co/3kXfCSt/checkered-shirt.png" alt="Checkered Shirt" class="product-image">
-                <div class="item-details">
-                    <h2>Checkered Shirt</h2>
-                    <p>Descrição: Lorem ipsum lorem ipsum</p>
-                    <span class="price">$180</span>
-                </div>
-                <div class="item-controls">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn">-</button>
-                        <span>1</span>
-                        <button class="quantity-btn">+</button>
-                    </div>
-                    <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>
-            <div class="cart-item">
-                <img src="https://i.ibb.co/yY1hNJP/jeans.png" alt="Skinny Fit Jeans" class="product-image">
-                <div class="item-details">
-                    <h2>Skinny Fit Jeans</h2>
-                    <p>Descrição: Lorem ipsum lorem ipsum</p>
-                    <span class="price">$240</span>
-                </div>
-                <div class="item-controls">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn">-</button>
-                        <span>1</span>
-                        <button class="quantity-btn">+</button>
-                    </div>
-                    <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -241,16 +213,12 @@
         <h2>Resumo do Pedido</h2>
         <div class="summary-line">
             <span>Subtotal</span>
-            <span>$565</span>
-        </div>
-        <div class="summary-line">
-            <span>Entrega</span>
-            <span>$15</span>
+            <span>{{ valor_total }}</span>
         </div>
         <hr>
         <div class="summary-line total">
             <span>Total</span>
-            <span>$580</span>
+            <span>{{ valor_total }}</span>
         </div>
         <button class="checkout-btn">
             Ir para o Pagamento
