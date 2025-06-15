@@ -16,6 +16,7 @@ urlpatterns = [
     path("my-account/", views.minha_conta, name="minha_conta"),
     path("carrinho/", views.carrinho, name="carrinho"),
     path("adicionar-ao-carrinho/<int:id>/", views.adicionar_ao_carrinho, name="adicionar_ao_carrinho"),
+    path("remover-do-carrinho/<int:id>/", views.remover_do_carrinho, name="remover_do_carrinho"),
 ]
 
 if settings.DEBUG:

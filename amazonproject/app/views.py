@@ -111,12 +111,20 @@ def carrinho(request):
         return redirect('login')  # Redirect to the login page if the user is not authenticated
     
     cliente = get_object_or_404(Cliente, id=request.user.id)
+    items_carrinho = ItemCarrinho.objects.filter(carrinho__cliente=cliente)
+    items_carrinho = Produto.objects.filter(
+        itemcarrinho__carrinho__cliente=cliente
+    ).distinct()  # Get distinct products in the cart for the client
     
     # Use get_or_create to either retrieve the existing cart or create a new one
     carrinho, created = Carrinho.objects.get_or_create(cliente=cliente)
+    valor_total = carrinho.total() 
     
     context = {
         'carrinho': carrinho,
+        'items': items_carrinho,
+        'valor_total': valor_total,
+
     }
     
     return render(request, 'app/carrinho.html', context) 
@@ -143,5 +151,20 @@ def adicionar_ao_carrinho(request, id):
     if not created:
         item_carrinho.quantidade += 1
         item_carrinho.save()
+    
+    return redirect('carrinho')
+
+def remover_do_carrinho(request, id):
+    if not request.user.is_authenticated:
+        return redirect('login') 
+
+    produto = get_object_or_404(Produto, id=id)
+    cliente = get_object_or_404(Cliente, id=request.user.id)
+    
+    try:
+        item_carrinho = ItemCarrinho.objects.get(carrinho__cliente=cliente, produto=produto)
+        item_carrinho.delete()
+    except ItemCarrinho.DoesNotExist:
+        pass  
     
     return redirect('carrinho')
