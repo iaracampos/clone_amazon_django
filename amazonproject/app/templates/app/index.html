@@ -1,79 +1,249 @@
-{% include './header.html' %}
-{% include './navbar.html' %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budega - Loja Online</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-    main {
-        padding: 40px 0;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 30px 20px;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
 
-    .product-card {
-        text-align: left;
-    }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    .product-card .product-image {
-        background-color: #f0f0f0;
-        margin-bottom: 15px;
-    }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-    .product-card img {
-        width: 100%;
-        display: block;
-    }
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
 
-    .product-card .product-name {
-        font-size: 20px;
-        font-weight: 500;
-        margin-bottom: 8px;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
 
-    .product-card .product-price {
-        font-size: 20px;
-        color: #025007;
-        text-align: left;
-    }
+        .logo i {
+            margin-right: 8px;
+            font-size: 28px;
+        }
 
-    .product-image {
-        aspect-ratio: 3 / 3;
-        border-radius: 4px;
-        background-color: #f0f0f0;
-    }
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 40px;
+        }
 
-    .product-image img {
-        width: 100%;
-        height: 100%;
-        display: block;
-    }
-</style>
+        .search-bar {
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .search-bar input {
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            flex-grow: 1;
+            background-color: #f5f5f5;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .search-bar button {
+            border: none;
+            background-color: #f5f5f5;
+            color: #757575;
+            padding: 0 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .main-nav ul,
+        .header-icons ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .main-nav a {
+            font-size: 15px;
+            color: #333;
+            padding: 10px;
+        }
+
+        .header-icons i {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .category-nav {
+            border-bottom: 1px solid #e5e5e5;
+            background-color: #333;
+        }
+
+        .category-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 45px;
+            padding: 15px 0;
+        }
+
+        .category-nav a {
+            font-size: 15px;
+            font-weight: 500;
+            color: #e5e5e5;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px 20px;
+        }
+
+        .product-card {
+            text-align: left;
+            display: block;
+        }
+
+        .product-card .product-image {
+            background-color: #f0f0f0;
+            margin-bottom: 15px;
+        }
+
+        .product-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .product-card .product-name {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .product-card .product-price {
+            font-size: 20px;
+            color: #025007;
+            text-align: left;
+        }
+
+        .product-image {
+            aspect-ratio: 3 / 3;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header container">
+    <div class="logo">
+        <i class='bx bx-store-alt'></i>
+        <span>Budega</span>
+    </div>
+
+    <div class="search-container">
+        <form method="get" class="search-bar">
+            <input type="text" name="search" value="{{ query_original }}" placeholder="Pesquisar">
+            <button type="submit">Pesquisar</button>
+        </form>
+    </div>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Contato</a></li>
+        </ul>
+    </nav>
+
+    <div class="header-icons">
+        <ul>
+            <li><a href="#"><i class='bx bx-heart'></i></a></li>
+            <li><a href="{% url 'carrinho' %}"><i class='bx bx-cart'></i></a></li>
+            <li><a href="{% url 'minha_conta' %}"><i class='bx bx-user-circle'></i></a></li>
+        </ul>
+    </div>
+</header>
+
+<nav class="category-nav">
+    <div class="container">
+        <ul>
+            {% for categoria in categorias %}
+                <li>
+                    <a href="?categoria={{ categoria.id }}">{{ categoria.nome }}</a>
+                </li>
+            {% empty %}
+                <li><span style="color: red;">Nenhuma categoria cadastrada.</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
+
+<br><br>
 
 <main class="container">
     <div class="product-grid">
-
         {% for product in products %}
-        <a href="{% url 'produto' product.id %}">
-            <div class="product-card">
-                <div class="product-image">
-                    {% if product.imagem and product.imagem.url %}
+        <a href="{% url 'produto' product.id %}" class="product-card">
+            <div class="product-image">
+                {% if product.imagem and product.imagem.url %}
                     <img src="{{ product.imagem.url }}" alt="{{ product.nome }}" class="product_image">
-
-                    {% else %}
+                {% else %}
                     <img src="https://placehold.co/300x400/f0f0f0/png?text=Sem+Foto" alt="Produto sem foto">
-
                     <p style="font-size: 10px; color: red; word-wrap: break-word; margin-top: 5px;">
                         <strong>Produto sem imagem no banco de dados.</strong>
                     </p>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <p class="product-name">{{ product.nome }}</p>
-                    <p class="product-price">R$ {{ product.preco|floatformat:2 }}</p>
-                </div>
+                {% endif %}
+            </div>
+            <div>
+                <p class="product-name">{{ product.nome }}</p>
+                <p class="product-price">R$ {{ product.preco|floatformat:2 }}</p>
             </div>
         </a>
         {% endfor %}
@@ -83,7 +253,7 @@
 <br><br>
 <footer class="container" style="text-align: center; padding: 20px; border-top: 1px solid #e5e5e5;">
     <p>&copy; 2025 Budega. Todos os direitos reservados.</p>
+</footer>
 
-    </body>
-
-    </html>
+</body>
+</html>

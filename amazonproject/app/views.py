@@ -2,20 +2,28 @@ from django.shortcuts import render
 from .models import *
 from django.shortcuts import get_object_or_404, redirect
 
-# Create your views here.
+
 def index(request):
     query = request.GET.get('search')
+    categoria_id = request.GET.get('categoria')
 
     products = Produto.objects.all()
 
     if query:
         products = products.filter(nome__icontains=query)
 
+    if categoria_id:
+        products = products.filter(categorias__id=categoria_id)
+
+    categorias = Categoria.objects.all()
+
     context = {
         'products': products,
-        'query_original': query, 
+        'categorias': categorias,
+        'query_original': query,
+        'categoria_selecionada': int(categoria_id) if categoria_id else None
     }
-    
+
     return render(request, 'app/index.html', context)
 
 def product(request, id):
@@ -26,7 +34,7 @@ def product(request, id):
     count_reviews = produto.count_reviews()
 
     range_rate = [1 for _ in range(produto.star_rating())]
-    range_void = [1 for _ in range(5 - produto.star_rating())]  
+    range_void = [1 for _ in range(5 - produto.star_rating())]
 
     
     context = {

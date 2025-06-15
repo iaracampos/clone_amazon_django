@@ -2,9 +2,10 @@
 {% include './navbar.html' %}
 
 <style>
+
     .main-content {
         max-width: 1000px;
-        margin: 4rem auto;
+        margin: 2rem auto; /* Reduzido de 4rem para 2rem no topo */
         padding: 0 2rem;
     }
 
@@ -21,10 +22,14 @@
         margin-bottom: 0.5rem;
     }
 
-    .identification-header p {
-        font-size: 1rem;
-        color: #666;
+    
+    .identification-header {
+        text-align: center;
+        position: relative;
+        top: -20px; /* Move 20px para cima */
+        margin-bottom: 2rem;
     }
+
 
     /* --- Container dos Formulários --- */
     .forms-container {
