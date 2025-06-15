@@ -19,7 +19,7 @@ def login_required(view_func):
 
 
 def index(request):
-    query = request.GET.get('search')
+    query = request.GET.get('search', '')  # Default para string vazia em vez de None
     categoria_id = request.GET.get('categoria')
 
     products = Produto.objects.all()
