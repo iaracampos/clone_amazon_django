@@ -1,6 +1,15 @@
 {% include './header.html' %}
 {% include './navbar.html' %}
 
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  {% for msg in messages %}
+    <p class="error">{{ msg }}</p>
+  {% endfor %}
+  <!-- campos de email e password -->
+</form>
+
+
 <style>
     main {
         width: 100%;

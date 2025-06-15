@@ -1,6 +1,21 @@
-from django.shortcuts import render
-from .models import *
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password, check_password
+from .models import Cliente, Produto, Review, Carrinho, ItemCarrinho, Categoria
+from functools import wraps
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+# Decorator para exigir login
+
+def login_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.session.get('cliente_id') is None:
+            messages.error(request, "Você precisa estar logado.")
+            return redirect('login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
 
 
 def index(request):
@@ -26,17 +41,17 @@ def index(request):
 
     return render(request, 'app/index.html', context)
 
+
 def product(request, id):
     produto = get_object_or_404(Produto, id=id)
-    cliente = get_object_or_404(Cliente, id=request.user.id) if request.user.is_authenticated else None
-    
+    cliente = None
+    if request.session.get('cliente_id'):
+        cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+
     comentarios = Review.objects.filter(produto=produto).order_by('-data')
-    count_reviews = produto.count_reviews()
+    range_rate = [1] * produto.star_rating()
+    range_void = [1] * (5 - produto.star_rating())
 
-    range_rate = [1 for _ in range(produto.star_rating())]
-    range_void = [1 for _ in range(5 - produto.star_rating())]
-
-    
     context = {
         'produto': produto,
         'comentarios': comentarios,
@@ -46,102 +61,105 @@ def product(request, id):
     }
 
     return render(request, 'app/product.html', context)
-    
+
 
 def adicionar_comentario(request, id):
+    if request.session.get('cliente_id') is None:
+        messages.error(request, "Você precisa estar logado para comentar.")
+        return redirect('login')
+
     produto = get_object_or_404(Produto, id=id)
-    cliente = get_object_or_404(Cliente, id=request.user.id)
+    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
 
     if request.method == 'POST':
-        texto_comentario = request.POST.get('texto')
-        if texto_comentario:
+        texto = request.POST.get('texto')
+        nota = request.POST.get('nota', 5)
+        if texto:
             Review.objects.create(
                 produto=produto,
                 cliente=cliente,
-                comentario=texto_comentario,
-                nota=request.POST.get('nota', 5)  
+                comentario=texto,
+                nota=nota
             )
-    return redirect('produto', id=produto.id) 
+    return redirect('produto', id=produto.id)
+
 
 def login(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            login(request, user)
-            return redirect('index')  # Redireciona para a página inicial após o login bem-sucedido
+        email = request.POST.get('email')
+        senha = request.POST.get('password')
+
+        try:
+            user = Cliente.objects.get(email=email)
+        except Cliente.DoesNotExist:
+            messages.error(request, "E‑mail não cadastrado.")
+            return redirect('login')
+
+        if check_password(senha, user.password):
+            request.session['cliente_id'] = user.id
+            return redirect('index')
         else:
-            error_message = "Usuário ou senha inválidos."
-            return render(request, 'app/login.html', {'error_message': error_message})
-    
-    return render(request, 'app/login.html')  # Renderiza o formulário de login
+            messages.error(request, "Senha incorreta.")
+            return redirect('login')
+
+    return render(request, 'app/login.html')
+
 
 def cadastro(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        nome = request.POST.get('nome')
         email = request.POST.get('email')
-        
-        user = Cliente.objects.create_user(username=username, password=password, email=email)
-        user.save()
-        
-        return redirect('login')  # Redireciona para a página de login após o cadastro bem-sucedido
-    
-    return render(request, 'app/cadastro.html')  # Renderiza o formulário de cadastro
+        senha = request.POST.get('password')
+        senha2 = request.POST.get('confirm_password')
+
+        if senha != senha2:
+            messages.error(request, "As senhas não conferem.")
+            return redirect('cadastro')
+
+        make_hash = make_password(senha)
+        Cliente.objects.create(
+            nome=nome,
+            email=email,
+            password=make_hash,
+            endereco=request.POST.get('endereco', ''),
+            telefone=request.POST.get('telefone', '')
+        )
+        messages.success(request, "Conta criada com sucesso! Faça login.")
+        return redirect('login')
+
+    return render(request, 'app/cadastro.html')
 
 
+@login_required
 def minha_conta(request):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redireciona para a página de login se o usuário não estiver autenticado
-    
-    cliente = get_object_or_404(Cliente, id=request.user.id)
-    
-    context = {
-        'cliente': cliente,
-    }
-    
-    return render(request, 'app/minha_conta.html', context)  # Renderiza a página da conta do usuário autenticado
+    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    return render(request, 'app/minha_conta.html', { 'cliente': cliente })
 
 
+@login_required
 def carrinho(request):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to the login page if the user is not authenticated
-    
-    cliente = get_object_or_404(Cliente, id=request.user.id)
-    
-    # Use get_or_create to either retrieve the existing cart or create a new one
-    carrinho, created = Carrinho.objects.get_or_create(cliente=cliente)
-    
-    context = {
-        'carrinho': carrinho,
-    }
-    
-    return render(request, 'app/carrinho.html', context) 
-
-
-def adicionar_ao_carrinho(request, id):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Or your app's login URL
-
-    produto = get_object_or_404(Produto, id=id)
-    # Assuming your Cliente model is linked one-to-one with the User model
-    cliente = get_object_or_404(Cliente, id=request.user.id)
-    
-    # Get or create a cart for the current client
+    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
     carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
-    
+    return render(request, 'app/carrinho.html', { 'carrinho': carrinho })
 
-    item_carrinho, created = ItemCarrinho.objects.get_or_create(
+
+@login_required
+def adicionar_ao_carrinho(request, id):
+    produto = get_object_or_404(Produto, id=id)
+    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
+
+    item, created = ItemCarrinho.objects.get_or_create(
         carrinho=carrinho,
         produto=produto,
-        defaults={'quantidade': 1}
+        defaults={'quantidade': 1, 'precoUnitario': produto.preco}
     )
-    
     if not created:
-        item_carrinho.quantidade += 1
-        item_carrinho.save()
-    
+        item.quantidade += 1
+        item.save()
+
     return redirect('carrinho')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

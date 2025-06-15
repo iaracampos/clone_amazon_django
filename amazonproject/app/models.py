@@ -1,15 +1,15 @@
 from django.db import models
 
-
 class Cliente(models.Model):
-    nome = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    endereco = models.TextField()
-    telefone = models.CharField(max_length=15)
+    nome     = models.CharField(max_length=50)
+    email    = models.EmailField(unique=True)
+    password   = models.CharField(max_length=128, default='', help_text='Senha (hash)')
+    endereco = models.TextField(blank=True)
+    telefone = models.CharField(max_length=15, blank=True)
     data_cadastro = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nome} - {self.email}"
+        return f"{self.nome} <{self.email}>"
     
 
 class Categoria(models.Model):
