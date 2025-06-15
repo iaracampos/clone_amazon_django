@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Cliente, Produto, Review, Carrinho, ItemCarrinho, Categoria
+from .models import *
 from functools import wraps
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -175,3 +175,74 @@ def adicionar_ao_carrinho(request, id):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def pagamento(request):
+    if request.method == 'POST':
+        cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+        carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
+
+        if not carrinho.itens.exists():
+            messages.error(request, "Seu carrinho está vazio.")
+            return redirect('carrinho')
+
+        # Criar o pedido
+        pedido = Pedido.objects.create(cliente=cliente, status='Pendente')
+
+        # Adicionar itens do carrinho ao pedido
+        for item in carrinho.itens.all():
+            ItemPedido.objects.create(
+                pedido=pedido,
+                produto=item.produto,
+                quantidade=item.quantidade,
+                precoUnitario=item.preco
+            )
+
+        # Limpar o carrinho
+        carrinho.itens.all().delete()
+
+        messages.success(request, "Pedido realizado com sucesso!")
+        return redirect('thanks')
+
+    return render(request, 'app/pagamento.html')
+
+def finalizar_pedido(request):
+    if request.method == 'POST':
+        cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+        carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
+
+        if not carrinho.itens.exists():
+            messages.error(request, "Seu carrinho está vazio.")
+            return redirect('carrinho')
+
+        # Criar o pedido
+        pedido = Pedido.objects.create(cliente=cliente, status='Pendente')
+
+        # Adicionar itens do carrinho ao pedido
+        for item in carrinho.itens.all():
+            ItemPedido.objects.create(
+                pedido=pedido,
+                produto=item.produto,
+                quantidade=item.quantidade,
+                precoUnitario=item.preco
+            )
+
+        # Limpar o carrinho
+        carrinho.itens.all().delete()
+
+        messages.success(request, "Pedido realizado com sucesso!")
+        return redirect('thanks')
+
+    return render(request, 'app/finalizar_pedido.html')
+
+@login_required
+def remover_item_carrinho(request, item_id):
+    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    carrinho = get_object_or_404(Carrinho, cliente=cliente)
+    item = get_object_or_404(ItemCarrinho, id=item_id, carrinho=carrinho)
+
+    item.delete()
+    messages.success(request, "Item removido do carrinho.")
+    return redirect('carrinho')
+
+def thanks(request):
+    return render(request, 'app/thanks.html')

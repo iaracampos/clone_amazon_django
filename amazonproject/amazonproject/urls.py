@@ -15,6 +15,10 @@ urlpatterns = [
     path('my-account/', views.minha_conta, name='minha_conta'),
     path('carrinho/', views.carrinho, name='carrinho'),
     path('adicionar-ao-carrinho/<int:id>/', views.adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
+    path('pagamento/', views.pagamento, name='pagamento'),
+    path('finalizar-pedido/', views.finalizar_pedido, name='finalizar_pedido'),
+    path('remover-item-carrinho/<int:item_id>/', views.remover_item_carrinho, name='remover_item_carrinho'),
+    path('thanks/', views.thanks, name='thanks'),
 ]
 
 if settings.DEBUG:
