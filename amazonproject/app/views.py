@@ -137,10 +137,22 @@ def minha_conta(request):
 
 
 @login_required
+@login_required
 def carrinho(request):
     cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
     carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
-    return render(request, 'app/carrinho.html', { 'carrinho': carrinho })
+    itens = ItemCarrinho.objects.filter(carrinho=carrinho)
+
+    # Calcular o valor total do carrinho
+    valor_total = sum(item.quantidade * item.preco for item in itens)
+
+    context = {
+        'carrinho': carrinho,
+        'items': itens,
+        'valor_total': f"R$ {valor_total:.2f}".replace('.', ',')  # formato brasileiro opcional
+    }
+    return render(request, 'app/carrinho.html', context)
+
 
 
 @login_required
@@ -152,7 +164,7 @@ def adicionar_ao_carrinho(request, id):
     item, created = ItemCarrinho.objects.get_or_create(
         carrinho=carrinho,
         produto=produto,
-        defaults={'quantidade': 1, 'precoUnitario': produto.preco}
+        defaults={'quantidade': 1, 'preco': produto.preco}
     )
     if not created:
         item.quantidade += 1

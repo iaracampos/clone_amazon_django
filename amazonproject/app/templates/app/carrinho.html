@@ -187,25 +187,27 @@
 
         <div class="cart-items">
             {% for item in items %}
-
-            <div class="cart-item">
-                <img src="{{ item.imagem.url }}" alt="{{ item.nome }}" class="product-image">
-                <div class="item-details">
-                    <h2>{{ item.nome }}</h2>
-                    <p>{{ item.descricao }}</p>
-                    <span class="price">{{ item.preco }}</span>
-                </div>
-                <div class="item-controls">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn">-</button>
-                        <span>1</span>
-                        <button class="quantity-btn">+</button>
+                <div class="cart-item">
+                    {% if item.produto.imagem %}
+                        <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}" class="product-image">
+                    {% else %}
+                        <img src="/static/images/placeholder.png" alt="Imagem não disponível" class="product-image">
+                    {% endif %}
+                    <div class="item-details">
+                        <h2>{{ item.produto.nome }}</h2>
+                        <p>{{ item.produto.descricao }}</p>
+                        <span class="price">R$ {{ item.produto.preco }}</span>
                     </div>
-                    <a class="delete-btn" href="{% url 'remover_do_carrinho' item.id %}"><i
-                            class="fas fa-trash-alt"></i></a>
+                    <div class="item-controls">
+                        <div class="quantity-selector">
+                            <button class="quantity-btn">-</button>
+                            <span>{{ item.quantidade }}</span>
+                            <button class="quantity-btn">+</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
             {% endfor %}
+
         </div>
     </div>
 
