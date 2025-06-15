@@ -222,7 +222,7 @@
             <span>Total</span>
             <span>{{ valor_total }}</span>
         </div>
-        <button class="checkout-btn">
+        <button class="checkout-btn" onclick="window.location.href='{% url 'pagamento' %}'">
             Ir para o Pagamento
             <i class="fas fa-arrow-right"></i>
         </button>
