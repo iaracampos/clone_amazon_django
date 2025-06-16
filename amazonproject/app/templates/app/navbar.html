@@ -130,14 +130,20 @@
         <div class="header-icons">
             <ul>
                 <li>
-                    <a href="#"><i class="bx bx-heart"></i></a>
+                    <a href="{% url 'carrinho' %}"><i class="bx bx-cart"></i></a>
                 </li>
                 <li>
-                    <a href="#"><i class="bx bx-cart"></i></a>
+                    <a href="{% url 'minha_conta' %}"><i class="bx bx-user-circle"></i></a>
                 </li>
+                {% if user.is_authenticated %}
                 <li>
-                    <a href="#"><i class="bx bx-user-circle"></i></a>
+                    <a href="{% url 'logout' %}"><i class="bx bx-log-out"></i></a>
                 </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'login' %}"><i class="bx bx-log-in"></i></a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </header>

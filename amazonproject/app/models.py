@@ -1,15 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Cliente(models.Model):
-    nome     = models.CharField(max_length=50)
-    email    = models.EmailField(unique=True)
-    password   = models.CharField(max_length=128, default='', help_text='Senha (hash)')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, default="default_user")
     endereco = models.TextField(blank=True)
     telefone = models.CharField(max_length=15, blank=True)
     data_cadastro = models.DateField(auto_now_add=True)
-
+    
     def __str__(self):
-        return f"{self.nome} <{self.email}>"
+        return f"{self.user.first_name} <{self.user.email}>"
+    
+
+# Signal para criar Cliente automaticamente quando User é criado
+@receiver(post_save, sender=User)
+def create_cliente_profile(sender, instance, created, **kwargs):
+    if created:
+        Cliente.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_cliente_profile(sender, instance, **kwargs):
+    instance.cliente.save()
     
 
 class Categoria(models.Model):
@@ -52,7 +64,7 @@ class Pedido(models.Model):
         return sum(item.precoUnitario * item.quantidade for item in self.itens.all())
 
     def __str__(self):
-        return f"Pedido #{self.id} - Cliente: {self.cliente.nome} - Status: {self.status}"
+        return f"Pedido #{self.id} - Cliente: {self.cliente.user.last_name} - Status: {self.status}"
 
 class ItemPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='itens')
@@ -63,13 +75,14 @@ class ItemPedido(models.Model):
     def __str__(self):
         return f"Produto: {self.produto.nome} - Quantidade: {self.quantidade}"
 
+
 class Carrinho(models.Model):
     cliente = models.OneToOneField(Cliente, on_delete=models.CASCADE)
     dataCriacao = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"Carrinho #{self.id} - Cliente: {self.cliente.nome} - Status: {self.status}"
+        return f"Carrinho #{self.id} - Cliente: {self.cliente.user.first_name} - Status: {self.status}"
     
     def total(self):
         return sum(item.produto.preco * item.quantidade for item in self.itens.all())

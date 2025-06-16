@@ -214,19 +214,19 @@
 
                 <div class="info-field">
                     <strong>Nome Completo:</strong>
-                    <span>Fernando José Gregatti Noronha</span>
+                    <span>{{ user.user.first_name }}</span>
                 </div>
                 <div class="info-field">
                     <strong>E-mail:</strong>
-                    <span>fernando.noronha@estudante.ufla.br</span>
+                    <span>{{ user.user.username }}</span>
                 </div>
                 <div class="info-field">
                     <strong>Telefone:</strong>
-                    <span>(35) 998047196</span>
+                    <span>{{ user.telefone }}</span>
                 </div>
                 <div class="info-field">
                     <strong>CPF:</strong>
-                    <span>119.300.196-02</span>
+                    <span>{{ user.id }}</span>
                 </div>
 
                 <div class="personal-info-buttons">
@@ -241,31 +241,31 @@
                     <div class="address-details">
                         <div class="info-field full-width">
                             <strong>Endereço:</strong>
-                            <span>Avenida Doutor José Nicolau Mileo</span>
+                            <span>{{user.endereco}}</span>
                         </div>
                         <div class="info-field">
                             <strong>Bairro:</strong>
-                            <span>Alto da Boa Vista</span>
+                            <span>-</span>
                         </div>
                         <div class="info-field">
                             <strong>Número:</strong>
-                            <span>943</span>
+                            <span>∞</span>
                         </div>
                         <div class="info-field">
                             <strong>CEP:</strong>
-                            <span>37480-000</span>
+                            <span>∞</span>
                         </div>
                         <div class="info-field">
                             <strong>Cidade:</strong>
-                            <span>Lambari</span>
+                            <span>-</span>
                         </div>
                         <div class="info-field">
                             <strong>Estado:</strong>
-                            <span>Minas Gerais</span>
+                            <span>-</span>
                         </div>
                         <div class="info-field">
                             <strong>Complemento:</strong>
-                            <span>Apartamento 01</span>
+                            <span>-</span>
                         </div>
                     </div>
                     <div class="address-card-footer">
