@@ -187,25 +187,28 @@
 
         <div class="cart-items">
             {% for item in items %}
-                <div class="cart-item">
-                    {% if item.produto.imagem %}
-                        <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}" class="product-image">
-                    {% else %}
-                        <img src="/static/images/placeholder.png" alt="Imagem não disponível" class="product-image">
-                    {% endif %}
-                    <div class="item-details">
-                        <h2>{{ item.produto.nome }}</h2>
-                        <p>{{ item.produto.descricao }}</p>
-                        <span class="price">R$ {{ item.produto.preco }}</span>
-                    </div>
-                    <div class="item-controls">
-                        <div class="quantity-selector">
-                            <button class="quantity-btn">-</button>
-                            <span>{{ item.quantidade }}</span>
-                            <button class="quantity-btn">+</button>
-                        </div>
-                    </div>
+            <div class="cart-item">
+                {% if item.produto.imagem %}
+                <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}" class="product-image">
+                {% else %}
+                <img src="/static/images/placeholder.png" alt="Imagem não disponível" class="product-image">
+                {% endif %}
+                <div class="item-details">
+                    <h2>{{ item.produto.nome }}</h2>
+                    <p>{{ item.produto.descricao }}</p>
+                    <span class="price">R$ {{ item.produto.preco }}</span>
                 </div>
+                <div class="item-controls">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn">-</button>
+                        <span>{{ item.quantidade }}</span>
+                        <button class="quantity-btn">+</button>
+                    </div>
+                    <a class="delete-btn" href="{% url 'remover_item_carrinho' item.id %}">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
             {% endfor %}
 
         </div>
@@ -222,9 +225,9 @@
             <span>Total</span>
             <span>{{ valor_total }}</span>
         </div>
-        <button class="checkout-btn" onclick="window.location.href='{% url 'pagamento' %}'">
+        <a class="checkout-btn" href="{% url 'pagamento' %}">
             Ir para o Pagamento
             <i class="fas fa-arrow-right"></i>
-        </button>
+        </a>
     </aside>
 </main>

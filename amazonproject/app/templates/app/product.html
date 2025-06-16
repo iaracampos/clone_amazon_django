@@ -9,7 +9,7 @@
         background-color: #fff;
         padding: 40px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .product-image {
@@ -169,7 +169,7 @@
         background-color: #fff;
         padding: 40px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .reviews-section h2 {
@@ -296,11 +296,12 @@
     <section class="product-section">
         <div class="product-image">
             {% if produto.imagem and produto.imagem.url %}
-                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
             {% else %}
-                <div style="width: 100%; text-align: center;">
-                    <img src="https://placehold.co/600x600/f0f0f0/png?text=Sem+Foto" alt="Produto sem foto" style="max-height: 400px;">
-                </div>
+            <div style="width: 100%; text-align: center;">
+                <img src="https://placehold.co/600x600/f0f0f0/png?text=Sem+Foto" alt="Produto sem foto"
+                    style="max-height: 400px;">
+            </div>
             {% endif %}
         </div>
 
@@ -312,10 +313,10 @@
                 <div class="rating-container">
                     <div class="stars">
                         {% for _ in range_rate %}
-                            <i class="fas fa-star fa-solid"></i>
+                        <i class="fas fa-star fa-solid"></i>
                         {% endfor %}
                         {% for _ in range_void %}
-                            <i class="fa-regular fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
                         {% endfor %}
                     </div>
                     <span class="rating-value">{{ produto.star_rating|floatformat:1 }}</span>
@@ -324,9 +325,9 @@
                     </a>
                 </div>
                 {% if produto.em_estoque %}
-                    <span class="stock-status in-stock">Em Estoque</span>
+                <span class="stock-status in-stock">Em Estoque</span>
                 {% else %}
-                    <span class="stock-status out-of-stock">Fora de Estoque</span>
+                <span class="stock-status out-of-stock">Fora de Estoque</span>
                 {% endif %}
             </div>
 
@@ -340,7 +341,7 @@
                 <input type="number" id="quantity-input" class="quantity-input" value="1" min="1" max="10">
                 <button class="quantity-btn" id="increase-btn">+</button>
             </div>
-            
+
             <a href="{% url 'adicionar_ao_carrinho' produto.id %}" class="buy-link">
                 <button class="buy-button" {% if not produto.em_estoque %}disabled{% endif %}>
                     {% if produto.em_estoque %}Comprar{% else %}Fora de Estoque{% endif %}
@@ -353,84 +354,85 @@
         <h2>Avaliações ({{ produto.count_reviews }})</h2>
 
         {% if user.is_authenticated %}
-            <form action="{% url 'adicionar_comentario' produto.id %}" method="post" class="review-form">
-                {% csrf_token %}
-                <div class="user-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <div class="review-content">
-                    <div class="review-header">
-                        <span class="reviewer-name">{{ user.username }}</span>
-                    </div>
-                    <textarea name="texto" placeholder="Escreva aqui sua avaliação deste produto..." required></textarea>
-                    
-                    <div class="rating-control">
-                        <label for="nota">Sua avaliação:</label>
-                        <div class="star-rating-input">
-                            {% for i in "12345"|make_list %}
-                                <i class="fa-regular fa-star" data-rating="{{ i }}"></i>
-                            {% endfor %}
-                        </div>
-                        <input type="hidden" name="nota" id="nota" value="5">
-                    </div>
-                    
-                    <button type="submit" class="publish-review-btn">Publicar Avaliação</button>
-                </div>
-            </form>
-        {% else %}
-            <div class="review-form">
-                <div class="user-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <div class="review-content">
-                    <p>Faça <a href="{% url 'login' %}">login</a> para deixar uma avaliação sobre este produto.</p>
-                </div>
+        <form action="{% url 'adicionar_comentario' produto.id %}" method="post" class="review-form">
+            {% csrf_token %}
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
             </div>
+            <div class="review-content">
+                <div class="review-header">
+                    <span class="reviewer-name">{{ user.username }}</span>
+                </div>
+                <textarea name="texto" placeholder="Escreva aqui sua avaliação deste produto..." required></textarea>
+
+                <div class="rating-control">
+                    <label for="nota">Sua avaliação:</label>
+                    <div class="star-rating-input">
+                        {% for i in "12345"|make_list %}
+                        <i class="fa-regular fa-star" data-rating="{{ i }}"></i>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="nota" id="nota" value="5">
+                </div>
+
+                <button type="submit" class="publish-review-btn">Publicar Avaliação</button>
+            </div>
+        </form>
+        {% else %}
+        <div class="review-form">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="review-content">
+                <p>Faça <a href="{% url 'login' %}">login</a> para deixar uma avaliação sobre este produto.</p>
+            </div>
+        </div>
         {% endif %}
 
         {% if comentarios %}
-            {% for comentario in comentarios %}
-                <div class="review-card">
-                    <div class="user-avatar">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <div class="review-content">
-                        <div class="review-header">
-                            <span class="reviewer-name">{{ comentario.cliente.nome }}</span>
-                            <span class="review-rating">
-                                {% for i in "12345"|make_list %}
-                                    {% if forloop.counter <= comentario.nota %}
-                                        <i class="fas fa-star"></i>
-                                    {% else %}
-                                        <i class="fa-regular fa-star"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </span>
-                            <span class="review-date">{{ comentario.data|date:"d/m/Y" }}</span>
-                        </div>
-                        <div class="review-text">
-                            <p>{{ comentario.comentario|linebreaksbr }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="no-reviews">
-                <p>Ainda não há avaliações para este produto. Seja o primeiro a avaliar!</p>
+        {% for comentario in comentarios %}
+        <div class="review-card">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
             </div>
+            <div class="review-content">
+                <div class="review-header">
+                    <span class="reviewer-name">
+                        {{ comentario.cliente.user.first_name|default:comentario.cliente.user.username }}
+                    </span>
+                    <span class="review-rating">
+                        {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= comentario.nota %} <i class="fas fa-star"></i>
+                            {% else %}
+                            <i class="fa-regular fa-star"></i>
+                            {% endif %}
+                            {% endfor %}
+                    </span>
+                    <span class="review-date">{{ comentario.data|date:"d/m/Y" }}</span>
+                </div>
+                <div class="review-text">
+                    <p>{{ comentario.comentario|linebreaksbr }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-reviews">
+            <p>Ainda não há avaliações para este produto. Seja o primeiro a avaliar!</p>
+        </div>
         {% endif %}
     </section>
 </main>
 
 <script>
     // Controle da quantidade
-    document.getElementById('increase-btn').addEventListener('click', function() {
+    document.getElementById('increase-btn').addEventListener('click', function () {
         const input = document.getElementById('quantity-input');
         let value = parseInt(input.value);
         if (value < 10) input.value = value + 1;
     });
 
-    document.getElementById('decrease-btn').addEventListener('click', function() {
+    document.getElementById('decrease-btn').addEventListener('click', function () {
         const input = document.getElementById('quantity-input');
         let value = parseInt(input.value);
         if (value > 1) input.value = value - 1;
@@ -439,12 +441,12 @@
     // Controle das estrelas de avaliação
     const stars = document.querySelectorAll('.star-rating-input i');
     const ratingInput = document.getElementById('nota');
-    
+
     stars.forEach(star => {
-        star.addEventListener('click', function() {
+        star.addEventListener('click', function () {
             const rating = parseInt(this.getAttribute('data-rating'));
             ratingInput.value = rating;
-            
+
             // Atualiza a exibição das estrelas
             stars.forEach((s, index) => {
                 if (index < rating) {
@@ -460,4 +462,5 @@
 </script>
 
 </body>
+
 </html>

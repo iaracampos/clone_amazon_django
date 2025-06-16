@@ -4,103 +4,130 @@
 <form method="post" action="{% url 'login' %}">
   {% csrf_token %}
   {% for msg in messages %}
-    <p class="error">{{ msg }}</p>
+  <p class="error">{{ msg }}</p>
   {% endfor %}
   <!-- campos de email e password -->
 </form>
 
 <style>
-    .main-content {
-        max-width: 1000px;
-        margin: 2rem auto;
-        padding: 0 2rem;
-    }
-    .identification-header {
-        text-align: center;
-        position: relative;
-        top: -20px;
-        margin-bottom: 2rem;
-    }
-    .identification-header h1 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        letter-spacing: 2px;
-        color: #000;
-        margin-bottom: 0.5rem;
-    }
-    .forms-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 3rem;
-    }
-    .form-box {
-        border: 1px solid #e0e0e0;
-        padding: 2.5rem;
-        background-color: #fff;
-        width: 100%;
-    }
-    .login-box { flex-basis: 50%; }
-    .form-title-icon {
-        display: flex;
-        align-items: center;
-        margin-bottom: 2rem;
-        border-bottom: 2px solid #000;
-        padding-bottom: 0.7rem;
-        width: fit-content;
-    }
-    .login-icon { font-size: 1.5rem; margin-right: 1rem; }
-    .register-box { flex-basis: 50%; }
-    .register-box h3 {
-        font-weight: 500;
-        margin-bottom: 1.5rem;
-        color: #333;
-    }
-    .input-group {
-        margin-bottom: 1.5rem;
-        position: relative;
-    }
-    .input-group input {
-        width: 100%;
-        padding: 1rem;
-        border: 1px solid #e0e0e0;
-        background-color: #f9f9f9;
-        font-size: 1rem;
-    }
-    .input-group label {
-        font-size: 0.9rem;
-        color: #888;
-        position: absolute;
-        top: 50%;
-        left: 1rem;
-        transform: translateY(-50%);
-        pointer-events: none;
-        transition: all 0.2s ease;
-    }
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
-        opacity: 0;
-    }
-    .input-group input:focus {
-        outline: 1px solid #000;
-        background-color: #fff;
-    }
-    .btn-primary {
-        width: 100%;
-        background-color: #000;
-        color: #fff;
-        border: none;
-        padding: 1rem;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        text-align: center;
-        transition: background-color 0.2s;
-    }
-    .btn-primary:hover {
-        background-color: #333;
-    }
-    .error { color: #c00; margin-bottom: 1rem; }
+  .main-content {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+
+  .identification-header {
+    text-align: center;
+    position: relative;
+    top: -20px;
+    margin-bottom: 2rem;
+  }
+
+  .identification-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #000;
+    margin-bottom: 0.5rem;
+  }
+
+  .forms-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .form-box {
+    border: 1px solid #e0e0e0;
+    padding: 2.5rem;
+    background-color: #fff;
+    width: 100%;
+  }
+
+  .login-box {
+    flex-basis: 50%;
+  }
+
+  .form-title-icon {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.7rem;
+    width: fit-content;
+  }
+
+  .login-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+
+  .register-box {
+    flex-basis: 50%;
+  }
+
+  .register-box h3 {
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+  }
+
+  .input-group label {
+    font-size: 0.9rem;
+    color: #888;
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+
+  .input-group input:focus+label,
+  .input-group input:not(:placeholder-shown)+label {
+    opacity: 0;
+  }
+
+  .input-group input:focus {
+    outline: 1px solid #000;
+    background-color: #fff;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: #333;
+  }
+
+  .error {
+    color: #c00;
+    margin-bottom: 1rem;
+  }
 </style>
 
 <main class="main-content">
@@ -120,9 +147,9 @@
       <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         {% if messages %}
-          {% for msg in messages %}
-            <p class="error">{{ msg }}</p>
-          {% endfor %}
+        {% for msg in messages %}
+        <p class="error">{{ msg }}</p>
+        {% endfor %}
         {% endif %}
         <div class="input-group">
           <input type="email" id="login-email" name="email" placeholder=" " required>
@@ -140,11 +167,10 @@
     <div class="form-box register-box">
       <h3>Ainda não possuo cadastro.</h3>
       <form method="post" action="{% url 'cadastro' %}">
-        {% csrf_token %}
         {% if messages %}
-          {% for msg in messages %}
-            <p class="error">{{ msg }}</p>
-          {% endfor %}
+        {% for msg in messages %}
+        <p class="error">{{ msg }}</p>
+        {% endfor %}
         {% endif %}
         <div class="input-group">
           <input type="text" id="register-nome" name="nome" placeholder=" " required>

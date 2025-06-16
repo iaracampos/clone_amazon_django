@@ -1,21 +1,103 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from .models import *
-from functools import wraps
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.contrib.auth import login as login_django
+from django.contrib.auth import logout as logout_django
+from django.contrib.auth.decorators import login_required
 
 # Decorator para exigir login
 
-def login_required(view_func):
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        if request.session.get('cliente_id') is None:
-            messages.error(request, "Você precisa estar logado.")
+def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        senha = request.POST.get('password')
+        
+        # First, find the user by email
+        try:
+            user_obj = User.objects.get(email=email)
+            username = user_obj.username
+        except User.DoesNotExist:
+            messages.error(request, "E-mail ou senha inválidos.")
             return redirect('login')
-        return view_func(request, *args, **kwargs)
-    return wrapper
+        
+        # Authenticate using username and password
+        user = authenticate(request, username=username, password=senha)
+        if user is not None:
+            login_django(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, "E-mail ou senha inválidos.")
+            return redirect('login')
+    
+    return render(request, 'app/login.html')
+
+
+def cadastro(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        senha = request.POST.get('password')
+        senha2 = request.POST.get('confirm_password')
+        endereco = request.POST.get('endereco', '')
+        telefone = request.POST.get('telefone', '')
+        
+        # Validate passwords match
+        if senha != senha2:
+            messages.error(request, "As senhas não conferem.")
+            return redirect('cadastro')
+        
+        # Check if email already exists
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "E-mail já cadastrado.")
+            return redirect('cadastro')
+        
+        # Validate password length (Django requirement)
+        if len(senha) < 8:
+            messages.error(request, "A senha deve ter pelo menos 8 caracteres.")
+            return redirect('cadastro')
+        
+        try:
+            # Create the User object
+            user = User.objects.create_user(
+                username=email,  # Using email as username
+                email=email,
+                password=senha,  # Django will hash this automatically
+                first_name=nome
+            )
+            
+            # Update the Cliente profile that was automatically created by signal
+            cliente = user.cliente
+            cliente.endereco = endereco
+            cliente.telefone = telefone
+            cliente.save()
+            
+            messages.success(request, "Conta criada com sucesso! Faça login.")
+            return redirect('login')
+            
+        except Exception as e:
+            messages.error(request, f"Erro ao criar conta: {e}")
+            return redirect('cadastro')
+    
+    return render(request, 'app/login.html')
+
+def logout(request):
+    logout_django(request)
+    messages.success(request, "Logout realizado com sucesso.")
+    return redirect('login')
+
+@login_required
+def profile(request):
+    """View para acessar dados do cliente logado"""
+    cliente = request.user.cliente
+    context = {
+        'cliente': cliente,
+        'user': request.user
+    }
+    return render(request, 'app/profile.html', context)
 
 
 def index(request):
@@ -45,8 +127,9 @@ def index(request):
 def product(request, id):
     produto = get_object_or_404(Produto, id=id)
     cliente = None
-    if request.session.get('cliente_id'):
-        cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
 
     comentarios = Review.objects.filter(produto=produto).order_by('-data')
     range_rate = [1] * produto.star_rating()
@@ -63,13 +146,15 @@ def product(request, id):
     return render(request, 'app/product.html', context)
 
 
+@login_required
 def adicionar_comentario(request, id):
-    if request.session.get('cliente_id') is None:
+    if not request.user.is_authenticated:
         messages.error(request, "Você precisa estar logado para comentar.")
         return redirect('login')
 
     produto = get_object_or_404(Produto, id=id)
-    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
 
     if request.method == 'POST':
         texto = request.POST.get('texto')
@@ -84,62 +169,18 @@ def adicionar_comentario(request, id):
     return redirect('produto', id=produto.id)
 
 
-def login(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        senha = request.POST.get('password')
-
-        try:
-            user = Cliente.objects.get(email=email)
-        except Cliente.DoesNotExist:
-            messages.error(request, "E‑mail não cadastrado.")
-            return redirect('login')
-
-        if check_password(senha, user.password):
-            request.session['cliente_id'] = user.id
-            return redirect('index')
-        else:
-            messages.error(request, "Senha incorreta.")
-            return redirect('login')
-
-    return render(request, 'app/login.html')
-
-
-def cadastro(request):
-    if request.method == 'POST':
-        nome = request.POST.get('nome')
-        email = request.POST.get('email')
-        senha = request.POST.get('password')
-        senha2 = request.POST.get('confirm_password')
-
-        if senha != senha2:
-            messages.error(request, "As senhas não conferem.")
-            return redirect('cadastro')
-
-        make_hash = make_password(senha)
-        Cliente.objects.create(
-            nome=nome,
-            email=email,
-            password=make_hash,
-            endereco=request.POST.get('endereco', ''),
-            telefone=request.POST.get('telefone', '')
-        )
-        messages.success(request, "Conta criada com sucesso! Faça login.")
-        return redirect('login')
-
-    return render(request, 'app/cadastro.html')
-
-
 @login_required
 def minha_conta(request):
-    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
-    return render(request, 'app/minha_conta.html', { 'cliente': cliente })
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
+
+    return render(request, 'app/minha_conta.html', { 'user': cliente })
 
 
-@login_required
 @login_required
 def carrinho(request):
-    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
     carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
     itens = ItemCarrinho.objects.filter(carrinho=carrinho)
 
@@ -158,7 +199,8 @@ def carrinho(request):
 @login_required
 def adicionar_ao_carrinho(request, id):
     produto = get_object_or_404(Produto, id=id)
-    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
     carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
 
     item, created = ItemCarrinho.objects.get_or_create(
@@ -177,8 +219,29 @@ def logout_view(request):
     return redirect('login')
 
 def pagamento(request):
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
+    else:
+        messages.error(request, "Você precisa estar logado para realizar o pagamento.")
+        return redirect('login')
+
+    carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
+
+    if not carrinho.itens.exists():
+        messages.error(request, "Seu carrinho está vazio.")
+        return redirect('carrinho')
+
+    context = {
+        'carrinho': carrinho,
+        'valor_total': f"R$ {carrinho.total():.2f}".replace('.', ',')  # formato brasileiro opcional
+    }
+    return render(request, 'app/pagamento.html', context)
+
+
+def pos_pagamento(request):
     if request.method == 'POST':
-        cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
         carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
 
         if not carrinho.itens.exists():
@@ -201,42 +264,15 @@ def pagamento(request):
         carrinho.itens.all().delete()
 
         messages.success(request, "Pedido realizado com sucesso!")
-        return redirect('thanks')
+        return render(request, 'app/thanks.html')
 
     return render(request, 'app/pagamento.html')
 
-def finalizar_pedido(request):
-    if request.method == 'POST':
-        cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
-        carrinho, _ = Carrinho.objects.get_or_create(cliente=cliente)
-
-        if not carrinho.itens.exists():
-            messages.error(request, "Seu carrinho está vazio.")
-            return redirect('carrinho')
-
-        # Criar o pedido
-        pedido = Pedido.objects.create(cliente=cliente, status='Pendente')
-
-        # Adicionar itens do carrinho ao pedido
-        for item in carrinho.itens.all():
-            ItemPedido.objects.create(
-                pedido=pedido,
-                produto=item.produto,
-                quantidade=item.quantidade,
-                precoUnitario=item.preco
-            )
-
-        # Limpar o carrinho
-        carrinho.itens.all().delete()
-
-        messages.success(request, "Pedido realizado com sucesso!")
-        return redirect('thanks')
-
-    return render(request, 'app/finalizar_pedido.html')
 
 @login_required
 def remover_item_carrinho(request, item_id):
-    cliente = get_object_or_404(Cliente, id=request.session['cliente_id'])
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
     carrinho = get_object_or_404(Carrinho, cliente=cliente)
     item = get_object_or_404(ItemCarrinho, id=item_id, carrinho=carrinho)
 

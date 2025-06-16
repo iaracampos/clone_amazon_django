@@ -286,36 +286,28 @@
         <div class="order-summary">
             <div class="summary-box">
                 <h2>RESUMO</h2>
-                <div class="product-item">
-                    <img src="https://i.imgur.com/yFwz9yD.png" alt="Camiseta Preta Estampada">
-                    <div class="product-info">
-                        <h3>Camiseta Preta Estampada</h3>
-                        <p>Roupas</p>
-                    </div>
-                    <div class="product-quantity">(1)</div>
-                    <div class="product-price">$199</div>
-                </div>
 
                 <div class="summary-calculation">
                     <div class="calculation-row">
                         <span>Subtotal</span>
-                        <span>$199</span>
+                        <span>{{ valor_total }}</span>
                     </div>
                     <div class="calculation-row">
                         <span>Entrega</span>
-                        <span>$15</span>
+                        <span>R$15</span>
                     </div>
                     <div class="calculation-row total">
                         <span>Total</span>
-                        <span>$214</span>
+                        <span>{{ valor_total }}</span>
                     </div>
                 </div>
-
-                <button class="buy-button" onclick="window.location.href='{% url 'thanks' %}'">
-                    Efetuar Compra
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
+                <form action="{% url 'pos_pagamento' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="buy-button">
+                        Efetuar Compra
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
             </div>
         </div>
 

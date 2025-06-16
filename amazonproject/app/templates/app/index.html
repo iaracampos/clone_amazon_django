@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -180,82 +181,88 @@
         }
     </style>
 </head>
+
 <body>
 
-<header class="main-header container">
-    <a href="{% url 'index' %}">
-        <div class="logo">
-            <i class="bx bx-store-alt"></i>
-            <span>Budega</span>
+    <header class="main-header container">
+        <a href="{% url 'index' %}">
+            <div class="logo">
+                <i class="bx bx-store-alt"></i>
+                <span>Budega</span>
+            </div>
+        </a>
+
+        <div class="search-container">
+            <form method="get" class="search-bar">
+                <input type="text" name="search" value="{{ query_original }}" placeholder="Pesquisar">
+                <button type="submit">Pesquisar</button>
+            </form>
         </div>
-     </a>
 
-    <div class="search-container">
-        <form method="get" class="search-bar">
-            <input type="text" name="search" value="{{ query_original }}" placeholder="Pesquisar">
-            <button type="submit">Pesquisar</button>
-        </form>
-    </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
 
-    <nav class="main-nav">
-        <ul>
-            <li><a href="#">Sobre</a></li>
-            <li><a href="#">Contato</a></li>
-        </ul>
-    </nav>
+        <div class="header-icons">
+            <ul>
+                <li><a href="{% url 'carrinho' %}"><i class='bx bx-cart'></i></a></li>
+                <li><a href="{% url 'minha_conta' %}"><i class='bx bx-user-circle'></i></a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}"><i class='bx bx-log-out'></i></a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}"><i class='bx bx-log-in'></i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
 
-    <div class="header-icons">
-        <ul>
-            <li><a href="#"><i class='bx bx-heart'></i></a></li>
-            <li><a href="{% url 'carrinho' %}"><i class='bx bx-cart'></i></a></li>
-            <li><a href="{% url 'minha_conta' %}"><i class='bx bx-user-circle'></i></a></li>
-        </ul>
-    </div>
-</header>
-
-<nav class="category-nav">
-    <div class="container">
-        <ul>
-            {% for categoria in categorias %}
+    <nav class="category-nav">
+        <div class="container">
+            <ul>
+                {% for categoria in categorias %}
                 <li>
                     <a href="?categoria={{ categoria.id }}">{{ categoria.nome }}</a>
                 </li>
-            {% empty %}
+                {% empty %}
                 <li><span style="color: red;">Nenhuma categoria cadastrada.</span></li>
-            {% endfor %}
-        </ul>
-    </div>
-</nav>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
 
-<br><br>
+    <br><br>
 
-<main class="container">
-    <div class="product-grid">
-        {% for product in products %}
-        <a href="{% url 'produto' product.id %}" class="product-card">
-            <div class="product-image">
-                {% if product.imagem and product.imagem.url %}
+    <main class="container">
+        <div class="product-grid">
+            {% for product in products %}
+            <a href="{% url 'produto' product.id %}" class="product-card">
+                <div class="product-image">
+                    {% if product.imagem and product.imagem.url %}
                     <img src="{{ product.imagem.url }}" alt="{{ product.nome }}" class="product_image">
-                {% else %}
+                    {% else %}
                     <img src="https://placehold.co/300x400/f0f0f0/png?text=Sem+Foto" alt="Produto sem foto">
                     <p style="font-size: 10px; color: red; word-wrap: break-word; margin-top: 5px;">
                         <strong>Produto sem imagem no banco de dados.</strong>
                     </p>
-                {% endif %}
-            </div>
-            <div>
-                <p class="product-name">{{ product.nome }}</p>
-                <p class="product-price">R$ {{ product.preco|floatformat:2 }}</p>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-</main>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="product-name">{{ product.nome }}</p>
+                    <p class="product-price">R$ {{ product.preco|floatformat:2 }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </main>
 
-<br><br>
-<footer class="container" style="text-align: center; padding: 20px; border-top: 1px solid #e5e5e5;">
-    <p>&copy; 2025 Budega. Todos os direitos reservados.</p>
-</footer>
+    <br><br>
+    <footer class="container" style="text-align: center; padding: 20px; border-top: 1px solid #e5e5e5;">
+        <p>&copy; 2025 Budega. Todos os direitos reservados.</p>
+    </footer>
 
 </body>
+
 </html>
